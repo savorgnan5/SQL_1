@@ -42,11 +42,12 @@ FROM address
 JOIN staff
 ON staff.address_id = address.address_id;
 #6 b
-SELECT staff.first_name, staff.last_name, payment.payment_date,payment.amount
+SELECT staff.first_name, staff.last_name, SUM(payment.amount)
 FROM staff
 JOIN payment
 ON staff.staff_id = payment.staff_id
-WHERE payment.payment_date like "%2005-08%";
+WHERE payment.payment_date like "%2005-08%"
+GROUP BY staff.staff_id;
 #6c
 SELECT film.title, COUNT(film_actor.actor_id)
 FROM film
@@ -85,10 +86,22 @@ JOIN address ON address.address_id = customer.address_id
 JOIN city ON city.city_id = city.city_id 
 JOIN country ON country.country_id = city.country_id
 WHERE country.country = "Canada";
-#7d please see this question to evaluate at the end of the code script.
-SELECT title, rating
-FROM film
-where rating = "G" or "PG";
+#7d.
+SELECT title, c.name
+FROM film f
+INNER JOIN film_category fc
+ON (f.film_id = fc.film_id)
+INNER JOIN category c
+ON (c.category_id = fc.category_id)
+WHERE c.name = "Family";
+
+SELECT f.title, c.name
+FROM film f
+INNER JOIN film_category fc
+ON (f.film_id = fc.film_id)
+INNER JOIN category c
+ON (c.category_id = fc.category_id)
+WHERE c.name = "Family";
 #7e
 USE sakila;
 SELECT COUNT( rental.rental_date ) AS "Frequenly Rent", film.title 
@@ -131,19 +144,3 @@ SELECT *
 FROM top_five_genres;
 #8c
 DROP VIEW top_five_genres;
-#7d
-SELECT title, c.name
-FROM film f
-INNER JOIN film_category fc
-ON (f.film_id = fc.film_id)
-INNER JOIN category c
-ON (c.category_id = fc.category_id)
-WHERE c.name = ‘Family’;
-
-SELECT f.title, c.name
-FROM film f
-INNER JOIN film_category fc
-ON (f.film_id = fc.film_id)
-INNER JOIN category c
-ON (c.category_id = fc.category_id)
-WHERE c.name = ‘Family’;
